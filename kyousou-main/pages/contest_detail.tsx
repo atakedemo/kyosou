@@ -46,19 +46,19 @@ const useStyles = makeStyles((theme) => ({
 const contests: Contest[] = [
   {
     id: "1",
-    name: '作品1',
+    name: 'Lock Lock Lock',
     price: 1000,
     imageUrl: 'https://dao-organizor.s3.ap-northeast-1.amazonaws.com/assets/kotatsu.png',
   },
   {
     id: "2",
-    name: '作品2',
+    name: 'Dream!!!!',
     price: 2000,
     imageUrl: 'https://dao-organizor.s3.ap-northeast-1.amazonaws.com/assets/kotatsu.png',
   },
   {
     id: "3",
-    name: '作品3',
+    name: 'The World',
     price: 3000,
     imageUrl: 'https://dao-organizor.s3.ap-northeast-1.amazonaws.com/assets/kotatsu.png',
   },
@@ -77,7 +77,7 @@ const ContestList = () => {
 
   const vote = async () => {
     console.log('Vote!!!!!!')
-    const _proposalId = ""
+    const _proposalId = 56849481842933172483649163787603366101907979723037914940441830123039909756530;
     try {
       const contract = new ethers.Contract(
         contractAddress,
@@ -100,7 +100,7 @@ const ContestList = () => {
         provider
       );
       const signer = await provider.getSigner();
-      const _proposalId = ""
+      const _proposalId = 0;
       await contract.connect(signer).vote(_proposalId,1000000000000000,0);
     } catch (error) {
       console.error(error);
@@ -162,7 +162,7 @@ const ContestList = () => {
                     </Box>
                     <Box style={{ padding:'5px', width:'100%' }}>
                       <Button 
-                        onClick={() => vote}
+                        onClick={vote}
                         style={{ backgroundColor: '#3f51b5', color: 'white', width:'100%' }}
                         disabled={submitting}
                       >
@@ -171,7 +171,7 @@ const ContestList = () => {
                     </Box>
                     <Box style={{ padding:'5px', width:'100%' }}>
                       <Button 
-                        onClick={() => voteWithPayment}
+                        onClick={voteWithPayment}
                         style={{ backgroundColor: '#3f51b5', color: 'white', width:'100%' }}
                         disabled={submitting}
                       >
