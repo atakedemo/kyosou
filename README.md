@@ -1,5 +1,6 @@
-# kyousou
-音楽✖︎web3のアイデアとして提出。コンテスト型のプラットフォーム。
+# Kyosou "競奏"
+* Decentralized platform to organize fair and free contests like hackathons 
+* 音楽✖︎web3のアイデアとして提出。コンテスト型のプラットフォーム。
 
 ***
 About
