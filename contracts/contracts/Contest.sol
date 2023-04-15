@@ -7,47 +7,50 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IERC1155} from "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC20KVT} from "./interfaces/IERC20KVT.sol";
+import {SafeMath} from "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract Contest {
     struct ProposalCore {
         address proposer;
         bool executed;
         bool canceled;
-        uint64 points;
+        uint256 points;
         uint256 balance;
     }
 
-    address _prize;
-    uint64 _1stPrize;
-    uint64 _2ndPrize;
-    uint64 _3rdPrize;
-    uint64 _1stPrizeRatio;
-    uint64 _2ndPrizeRatio;
-    uint64 _3rdPrizeRatio;
-    uint64 _voteStart;
-    uint64 _voteEnd;
-    uint256 _snapshotId;
+    address public _prize;
+    uint256 public _1stPrize;
+    uint256 public _2ndPrize;
+    uint256 public _3rdPrize;
+    uint256 public _1stPrizeRatio;
+    uint256 public _2ndPrizeRatio;
+    uint256 public _3rdPrizeRatio;
+    uint256 _voteStart;
+    uint256 _voteEnd;
+    uint256 public _currentSnapshotId;
 
     IERC20KVT _tokenKVT;
     IERC1155 _tokenNft;
 
     address _adminAddress;
+    address _erc20KVT;
     address _rewardAddress;
 
     mapping(uint256 => ProposalCore) public _proposals;
+
+    event ProposalCreated( address proposer, uint256 proposalId);
+    event setConfiture(bytes data);
 
     //ToDO: 最後に実装
     constructor(
         address prize,
         address reward,
-        uint64 first,
-        uint64 second,
-        uint64 third,
-        uint64 firstRatio,
-        uint64 secondRatio,
-        uint64 thirdRatio,
-        uint64 voteStart,
-        uint64 voteEnd
+        uint256 first,
+        uint256 second,
+        uint256 third,
+        uint256 firstRatio,
+        uint256 secondRatio,
+        uint256 thirdRatio
     ) payable {
         _prize = prize;
         _1stPrize = first;
@@ -56,7 +59,7 @@ contract Contest {
         _1stPrizeRatio = firstRatio;
         _2ndPrizeRatio = secondRatio;
         _3rdPrizeRatio = thirdRatio;
-        _snapshotId = 0;
+        _currentSnapshotId = 0;
 
         _proposals[0] = ProposalCore({
             proposer: msg.sender,
@@ -66,25 +69,45 @@ contract Contest {
             balance: 0
         });
 
-        _voteStart = voteStart;
-        _voteEnd = voteEnd;
+        //_voteStart = voteStart;
+        //_voteEnd = voteEnd;
 
         _adminAddress = msg.sender;
         _rewardAddress = reward;
     }
 
-    function configureIERC20(
+    function setIERC20(
         address contractAddress
     ) external {
         require(_adminAddress == msg.sender);
         _tokenKVT = IERC20KVT(contractAddress);
+        _erc20KVT = contractAddress;
+        emit setConfiture(msg.data);
     }
 
-    function configureIERC1155(
+    function setIERC1155(
         address contractAddress
     ) external {
         require(_adminAddress == msg.sender);
         _tokenNft = IERC1155(contractAddress);
+        emit setConfiture(msg.data);
+    }
+
+    function setRewardAddress(
+        address contractAddress
+    ) external {
+        require(_adminAddress == msg.sender);
+        _rewardAddress = contractAddress;
+        emit setConfiture(msg.data);
+    }
+
+    function stakeReward (
+        uint256 amount
+    ) external {
+        require(_adminAddress == msg.sender);
+        _tokenKVT.transferFrom(msg.sender, _erc20KVT, amount);
+        _proposals[0].balance = amount;
+        emit setConfiture(msg.data);
     }
 
     function vote(
@@ -121,13 +144,7 @@ contract Contest {
             balance: 0
         });
 
-        /* ToDo: 余力あれば
-        emit ProposalCreated(
-            proposalId,
-            proposer
-        );
-        */
-
+        emit ProposalCreated(proposer,proposalId);
         return proposalId;
     }
 
@@ -135,23 +152,23 @@ contract Contest {
         uint256 snapshotId
     )public virtual {
         require(_adminAddress == msg.sender);
-        _snapshotId = snapshotId;
+        _currentSnapshotId = snapshotId;
     }
 
     function withdraw(
         uint256 proposalId
     )public virtual {
-        //スナップショットIDからそうトークン数を取得(ガバナンストークンから読み取り処理)
-        uint256 tmpTotalSupply = _tokenKVT.totalSupplyAt(_snapshotId);
+        //スナップショットIDから合計トークン数を取得(ガバナンストークンから読み取り処理)
+        uint256 tmpTotalSupply = _tokenKVT.totalSupplyAt(_currentSnapshotId);
         uint256 tmpBalance;
         uint256 reward;
 
-        require(_snapshotId != 0);
+        require(_currentSnapshotId != 0);
         require(!_proposals[proposalId].executed);
         require(_proposals[proposalId].proposer == msg.sender);
-        tmpBalance = _tokenKVT.balanceOfAt(_proposals[proposalId].proposer, _snapshotId);
+        tmpBalance = _tokenKVT.balanceOfAt(_proposals[proposalId].proposer, _currentSnapshotId);
         reward = _proposals[proposalId].balance + _proposals[0].balance * tmpBalance / tmpTotalSupply - 1;
-        IERC20(_rewardAddress).transfer(_proposals[proposalId].proposer, reward);
+        IERC20(_rewardAddress).transferFrom(_erc20KVT ,_proposals[proposalId].proposer, reward);
         _proposals[proposalId].executed = true;
     }
 
