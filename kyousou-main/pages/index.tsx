@@ -4,7 +4,7 @@ import Router from 'next/router';
 import { ConnectWallet, useNetwork, useAddress, useContract, useContractWrite, Web3Button } from "@thirdweb-dev/react";
 import styles from "../styles/Home.module.css";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
-import { Button, TextField, Grid, Paper, Typography } from '@material-ui/core';
+import { Grid, Card, CardMedia, CardContent, Typography, Button, IconButton, Box } from '@material-ui/core';
 
 const Home: NextPage = () => {
   const address = useAddress();
@@ -56,9 +56,17 @@ const Home: NextPage = () => {
     }
   };
 
-  const route = async () => {
+  const routeContestList = async () => {
     try {
       Router.push("contest_list");
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+  const routeMusicRegister = async () => {
+    try {
+      Router.push("music_register");
     } catch (error) {
       console.log(error)
     }
@@ -68,21 +76,51 @@ const Home: NextPage = () => {
     <div className={styles.container}>
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to Kyousou (競奏)
+          Welcome to Kyosou "競奏"
         </h1>
         <p></p>
         <div className={styles.connect}>
           <ConnectWallet />
         </div>
-        <h1 className={styles.title}>Mint your free 🍪DAO Membership NFT</h1>
         
-        <button disabled={isClaiming} onClick={mintNft}>
-          {isClaiming ? "Minting..." : "Mint your nft (FREE)"}
-        </button>
-        <button onClick={route}>
-          To Top
-        </button>
-        
+        <Box style={{ width: '100%', display: 'flex' }}>
+          <Card style={{ width: '31%', textAlign: 'center', backgroundColor: '#a09fa6', margin: '10px' }}>
+            <CardMedia component="img" image="https://dao-organizor.s3.ap-northeast-1.amazonaws.com/assets/organizor.png" />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="h2">
+                Contest Organizer (Coming soon...)
+              </Typography>
+            </CardContent>
+          </Card>
+          <Card style={{ width: '31%', textAlign: 'center', margin: '10px' }}>
+            <CardMedia component="img" image="https://dao-organizor.s3.ap-northeast-1.amazonaws.com/assets/musician.png" />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="h2">
+                For Musician
+              </Typography>
+              <Button 
+                onClick={routeMusicRegister}
+                style={{ backgroundColor: '#3f51b5', color: 'white' }}
+              >
+                Register Music
+              </Button>
+            </CardContent>
+          </Card>
+          <Card style={{ width: '31%', textAlign: 'center', margin: '10px' }}>
+            <CardMedia component="img" image="https://dao-organizor.s3.ap-northeast-1.amazonaws.com/assets/audience.png" />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="h2">
+                For Audience
+              </Typography>
+              <Button 
+                onClick={routeContestList}
+                style={{ backgroundColor: '#3f51b5', color: 'white' }}
+              >
+                Play&Vote
+              </Button>
+            </CardContent>
+          </Card>
+        </Box>
       </main>
     </div>
   );

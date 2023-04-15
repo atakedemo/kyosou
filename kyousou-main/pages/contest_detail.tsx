@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import type { NextPage } from "next";
 import { useRouter } from 'next/router';
-import { Grid, Card, CardMedia, CardContent, Typography, Button, IconButton } from '@material-ui/core';
-import { AddShoppingCart, ShoppingCart, Info, Share } from '@material-ui/icons';
+import { Grid, Card, CardMedia, CardContent, Typography, Button, IconButton, Box } from '@material-ui/core';
+import { MusicNote, Info, Share } from '@material-ui/icons';
+import AudioPlayer from '../components/auto_player';
 
 type Contest = {
   id: string;
@@ -34,13 +35,9 @@ const contests: Contest[] = [
 
 const ContestList = () => {
   const router = useRouter();
-  
-  const handleDetail = () => {
 
-  }
-
-  const handleRegister = () => {
-
+  const vote = () => {
+    console.log('Vote!!!!!!')
   }
 
   const routeItemDetail = async (id: string) => {
@@ -58,36 +55,50 @@ const ContestList = () => {
   };
 
   return (
-    <Grid container spacing={2}>
-      {contests.map((contest) => (
-        <Grid item xs={12} sm={6} md={4} key={contest.id}>
-          <Card>
-            <CardMedia component="img" image={contest.imageUrl} title={contest.name} />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                {contest.name}
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                {contest.price}円
-              </Typography>
-              <IconButton
-                color="primary"
-                aria-label="add to cart"
-                onClick={() => routeItemDetail(contest.id)}
-              >
-                <ShoppingCart />
-              </IconButton>
-              <Button href={`/contests/${contest.id}`} startIcon={<Info />} size="small">
-                コンテスト詳細
-              </Button>
-              <IconButton color="primary" aria-label="share">
-                <Share />
-              </IconButton>
-            </CardContent>
-          </Card>
+    <>
+      <Box p={2} textAlign="center" style={{ padding:'20px' }}>
+        <Grid container spacing={2}>
+          <Typography gutterBottom variant="h2" component="h2">
+            Sample Contest
+          </Typography>
         </Grid>
-      ))}
-    </Grid>
+        <Grid container spacing={2}>
+          <Typography gutterBottom variant="h5" component="h2">
+            2023/04/01~2023/04/31
+          </Typography>
+        </Grid>
+          <Grid container spacing={2}>
+          {contests.map((contest) => (
+            <Grid item xs={12} sm={6} md={3} key={contest.id}>
+              <Card>
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="h2">
+                    {contest.name}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary" component="p">
+                    Artist : 0xfjaiofashfadsfaos
+                  </Typography>
+                  
+                  <Box style={{ padding:'5px' }}>
+                    <AudioPlayer src="https://dao-org.4attraem.com/assets/yume.mp3" />
+                  </Box>
+                  <Box style={{ padding:'5px', width:'100%' }}>
+                    <Button 
+                      onClick={() => vote}
+                      style={{ backgroundColor: '#3f51b5', color: 'white', width:'100%' }}
+                    >
+                      Vote
+                    </Button>
+                  </Box>
+                </CardContent>
+                
+              </Card>
+              
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+    </>
   );
 };
 
