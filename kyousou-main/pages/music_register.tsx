@@ -64,9 +64,10 @@ const MusicRegister: NextPage = () => {
   const routeTop = async () => {Router.push("murabito");};
   const contractAddress="0x9a513e5C611Bf76D5bC8001783Da8Ea2F3456115";
   const contractAbi=abiContestJson.abi;
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  
 
   useEffect(() => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const contract = new Contract(contractAddress, contractAbi, provider);
     const filter = contract.filters;
     contract.on(filter, (res:any, proposalId:String) => {
@@ -91,6 +92,7 @@ const MusicRegister: NextPage = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSubmitting(true);
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
 
     try {
       const contract = new ethers.Contract(

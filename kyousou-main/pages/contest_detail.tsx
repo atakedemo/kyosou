@@ -68,7 +68,7 @@ const ContestList = () => {
   const classes = useStyles();
   const contractAddress="0x9a513e5C611Bf76D5bC8001783Da8Ea2F3456115";
   const contractAbi=abiContestJson.abi;
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [hrefProposalId, setProposalId] = useState<string>("");
@@ -77,7 +77,8 @@ const ContestList = () => {
 
   const vote = async () => {
     console.log('Vote!!!!!!')
-    const _proposalId = 56849481842933172483649163787603366101907979723037914940441830123039909756530;
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const _proposalId = "56849481842933172483649163787603366101907979723037914940441830123039909756530";
     try {
       const contract = new ethers.Contract(
         contractAddress,
@@ -92,6 +93,7 @@ const ContestList = () => {
   }
 
   const voteWithPayment = async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     console.log('Vote!!!!!!')
     try {
       const contract = new ethers.Contract(
@@ -108,6 +110,7 @@ const ContestList = () => {
   }
 
   useEffect(() => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const contract = new Contract(contractAddress, contractAbi, provider);
     const filter = contract.filters;
     contract.on(filter, (res: any) => {
