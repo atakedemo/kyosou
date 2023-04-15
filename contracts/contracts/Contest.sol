@@ -12,6 +12,7 @@ import {SafeMath} from "@openzeppelin/contracts/utils/math/SafeMath.sol";
 contract Contest {
     struct ProposalCore {
         address proposer;
+        string discription;
         bool executed;
         bool canceled;
         uint256 points;
@@ -35,6 +36,7 @@ contract Contest {
     address _adminAddress;
     address _erc20KVT;
     address _rewardAddress;
+    uint256[] proposalIds; 
 
     mapping(uint256 => ProposalCore) public _proposals;
 
@@ -65,6 +67,7 @@ contract Contest {
             proposer: msg.sender,
             executed: false,
             canceled: false,
+            discription: "",
             points: 0,
             balance: 0
         });
@@ -140,9 +143,12 @@ contract Contest {
             proposer: proposer,
             executed: false,
             canceled: false,
+            discription: description,
             points: 0,
             balance: 0
         });
+
+        proposalIds.push(proposalId);
 
         emit ProposalCreated(proposer,proposalId);
         return proposalId;

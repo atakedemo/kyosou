@@ -1,8 +1,9 @@
-import { useState } from 'react';
 import type { NextPage } from "next";
 import Router from 'next/router';
 import { Grid, Card, CardMedia, CardContent, Typography, Button, IconButton, Box } from '@material-ui/core';
 import { LibraryMusic } from '@material-ui/icons';
+import React from "react";
+
 
 type Contest = {
   id: string;
@@ -33,14 +34,6 @@ const contests: Contest[] = [
 ];
 
 const ContestList = () => {
-  const handleDetail = () => {
-
-  }
-
-  const handleRegister = () => {
-
-  }
-
   const routeContestDetail = async () => {
     try {
       Router.push("contest_detail");

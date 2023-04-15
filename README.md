@@ -12,6 +12,6 @@ Environment
 
 |Item|Address|
 |---|---|
-|Contest.sol(Main)|0x376E97A628be82B0C6c6a9f66de4FeE0cF0f803b|
+|Contest.sol(Main)|0x9a513e5C611Bf76D5bC8001783Da8Ea2F3456115|
 |Reward(USDT)|0xA02f6adc7926efeBBd59Fd43A84f4E0c0c91e832|
 
