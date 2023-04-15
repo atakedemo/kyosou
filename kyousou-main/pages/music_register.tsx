@@ -62,7 +62,7 @@ const MusicRegister: NextPage = () => {
   const [hrefProposalId, setProposalId] = useState<string>("");
 
   const routeTop = async () => {Router.push("murabito");};
-  const contractAddress="0x376e97a628be82b0c6c6a9f66de4fee0cf0f803b";
+  const contractAddress="0x9a513e5C611Bf76D5bC8001783Da8Ea2F3456115";
   const contractAbi=abiContestJson.abi;
   const provider = new ethers.providers.Web3Provider(window.ethereum);
 

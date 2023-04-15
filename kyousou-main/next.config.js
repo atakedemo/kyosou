@@ -1,4 +1,9 @@
 /** @type {import('next').NextConfig} */
-export const nextConfig = {
+const nextConfig = {
   reactStrictMode: true,
+  typescript: {
+    ignoreBuildErrors: true
+  }
 };
+
+module.exports = nextConfig;

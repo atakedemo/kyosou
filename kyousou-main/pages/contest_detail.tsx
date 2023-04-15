@@ -66,7 +66,7 @@ const contests: Contest[] = [
 
 const ContestList = () => {
   const classes = useStyles();
-  const contractAddress="0x376e97a628be82b0c6c6a9f66de4fee0cf0f803b";
+  const contractAddress="0x9a513e5C611Bf76D5bC8001783Da8Ea2F3456115";
   const contractAbi=abiContestJson.abi;
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const [submitting, setSubmitting] = useState(false);
@@ -75,7 +75,23 @@ const ContestList = () => {
 
   const routeTop = async () => {Router.push("murabito");};
 
-  const vote = async (_proposalId: number) => {
+  const vote = async () => {
+    console.log('Vote!!!!!!')
+    const _proposalId = ""
+    try {
+      const contract = new ethers.Contract(
+        contractAddress,
+        contractAbi,
+        provider
+      );
+      const signer = await provider.getSigner();
+      await contract.connect(signer).vote(_proposalId,0,0);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const voteWithPayment = async () => {
     console.log('Vote!!!!!!')
     try {
       const contract = new ethers.Contract(
@@ -84,7 +100,8 @@ const ContestList = () => {
         provider
       );
       const signer = await provider.getSigner();
-      await contract.connect(signer).vote(_proposalId);
+      const _proposalId = ""
+      await contract.connect(signer).vote(_proposalId,1000000000000000,0);
     } catch (error) {
       console.error(error);
     }
@@ -150,6 +167,15 @@ const ContestList = () => {
                         disabled={submitting}
                       >
                         {submitting ? 'Voting...' : 'Vote'}
+                      </Button>
+                    </Box>
+                    <Box style={{ padding:'5px', width:'100%' }}>
+                      <Button 
+                        onClick={() => voteWithPayment}
+                        style={{ backgroundColor: '#3f51b5', color: 'white', width:'100%' }}
+                        disabled={submitting}
+                      >
+                        {submitting ? 'Voting...' : 'Vote with payment'}
                       </Button>
                     </Box>
                   </CardContent>
