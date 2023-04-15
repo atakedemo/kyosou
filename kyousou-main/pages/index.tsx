@@ -76,7 +76,7 @@ const Home: NextPage = () => {
     <div className={styles.container}>
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to Kyosou "競奏"
+          Welcome to Kyosou 競奏
         </h1>
         <p></p>
         <div className={styles.connect}>
