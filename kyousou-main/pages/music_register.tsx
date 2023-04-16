@@ -6,7 +6,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import { ChainId, useNetwork, useAddress } from "@thirdweb-dev/react";
 const { utils, Contract, ethers } = require('ethers');
-//import styles from "../styles/Home.module.css";
 import abiContestJson from "../abi/Contest.json";
 
 const useStyles = makeStyles((theme) => ({
@@ -62,7 +61,7 @@ const MusicRegister: NextPage = () => {
   const [hrefProposalId, setProposalId] = useState<string>("");
 
   const routeTop = async () => {Router.push("murabito");};
-  const contractAddress="0x9a513e5C611Bf76D5bC8001783Da8Ea2F3456115";
+  const contractAddress="0xF04E12B81C80915B1Cb0CAEb00f80C990Ab8C474";
   const contractAbi=abiContestJson.abi;
   
 

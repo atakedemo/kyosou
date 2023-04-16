@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import type { NextPage } from "next";
 import Router from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Card, CardContent, Typography, Button, Link, Box, Paper } from '@material-ui/core';
@@ -66,7 +67,7 @@ const contests: Contest[] = [
 
 const ContestList = () => {
   const classes = useStyles();
-  const contractAddress="0x9a513e5C611Bf76D5bC8001783Da8Ea2F3456115";
+  const contractAddress="0xF04E12B81C80915B1Cb0CAEb00f80C990Ab8C474";
   const contractAbi=abiContestJson.abi;
   
   const [submitting, setSubmitting] = useState(false);
@@ -76,17 +77,20 @@ const ContestList = () => {
   const routeTop = async () => {Router.push("murabito");};
 
   const vote = async () => {
-    console.log('Vote!!!!!!')
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const _proposalId = "56849481842933172483649163787603366101907979723037914940441830123039909756530";
+    const _proposalId = "98141655824810256999349870770276401971676011510229032527330856770462069648716";
+    const signer = await provider.getSigner();
     try {
       const contract = new ethers.Contract(
         contractAddress,
         contractAbi,
-        provider
+        signer
       );
-      const signer = await provider.getSigner();
-      await contract.connect(signer).vote(_proposalId,0,0);
+      
+      await contract.vote(_proposalId,0,0, {
+        value: ethers.utils.parseEther("0.0"),
+        gasLimit: 100000,
+      });
     } catch (error) {
       console.error(error);
     }
@@ -94,7 +98,6 @@ const ContestList = () => {
 
   const voteWithPayment = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-    console.log('Vote!!!!!!')
     try {
       const contract = new ethers.Contract(
         contractAddress,
@@ -102,8 +105,11 @@ const ContestList = () => {
         provider
       );
       const signer = await provider.getSigner();
-      const _proposalId = 0;
-      await contract.connect(signer).vote(_proposalId,1000000000000000,0);
+      const _proposalId = "98141655824810256999349870770276401971676011510229032527330856770462069648716";
+      await contract.vote(_proposalId,0,0, {
+        value: ethers.utils.parseEther("1"),
+        gasLimit: 100000,
+      });
     } catch (error) {
       console.error(error);
     }
