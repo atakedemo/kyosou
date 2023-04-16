@@ -5,8 +5,6 @@ pragma solidity ^0.8.9;
 // import "hardhat/console.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IERC1155} from "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {IERC20KVT} from "./interfaces/IERC20KVT.sol";
 import {SafeMath} from "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract Contest {
@@ -30,13 +28,12 @@ contract Contest {
     uint256 _voteEnd;
     uint256 public _currentSnapshotId;
 
-    IERC20KVT _tokenKVT;
     IERC1155 _tokenNft;
 
     address _adminAddress;
     address _erc20KVT;
-    address _rewardAddress;
-    uint256[] proposalIds; 
+    uint256[] proposalIds;
+    uint256 totalSupply = 0;
 
     mapping(uint256 => ProposalCore) public _proposals;
 
@@ -46,7 +43,6 @@ contract Contest {
     //ToDO: 最後に実装
     constructor(
         address prize,
-        address reward,
         uint256 first,
         uint256 second,
         uint256 third,
@@ -76,16 +72,6 @@ contract Contest {
         //_voteEnd = voteEnd;
 
         _adminAddress = msg.sender;
-        _rewardAddress = reward;
-    }
-
-    function setIERC20(
-        address contractAddress
-    ) external {
-        require(_adminAddress == msg.sender);
-        _tokenKVT = IERC20KVT(contractAddress);
-        _erc20KVT = contractAddress;
-        emit setConfiture(msg.data);
     }
 
     function setIERC1155(
@@ -96,38 +82,31 @@ contract Contest {
         emit setConfiture(msg.data);
     }
 
-    function setRewardAddress(
-        address contractAddress
-    ) external {
+    function stakeReward () external payable{
         require(_adminAddress == msg.sender);
-        _rewardAddress = contractAddress;
+        _proposals[0].balance = msg.value;
         emit setConfiture(msg.data);
     }
 
-    function stakeReward (
-        uint256 amount
-    ) external {
-        require(_adminAddress == msg.sender);
-        _tokenKVT.transferFrom(msg.sender, _erc20KVT, amount);
-        _proposals[0].balance = amount;
-        emit setConfiture(msg.data);
-    }
-
-    function vote(
+    function vote (
         uint256 proposalId,
         uint256 balanceProposal,
         uint256 balanceAll
-    ) public {
-        //ToDo: 投票期限であるかの制御
+    ) public payable {
+        //ToDo: 諸々の制御を加える
+        //require() 投票期限である
+        //require() NFT所有などの条件を満たしている
 
-        //ガバナンストークンを送る
-        address to = _proposals[proposalId].proposer;
-        _tokenKVT.transferFrom(msg.sender, to, 1000000000);
-
-        //投げ銭を加算(to 作品 or 全体)
         ProposalCore storage proposal = _proposals[proposalId];
+        //ポイントを加算する
+        uint256 prePoint = proposal.points;
+        _proposals[proposalId].points = prePoint + 1;
+        _proposals[0].points =  _proposals[0].points + 1;
+
+        //投げ銭を受け取る＆加算(to 作品 or 全体)
+        require(balanceAll + balanceProposal < msg.value);
         uint256 tmpBlance = proposal.balance;
-        tmpBlance = tmpBlance+ balanceProposal;
+        tmpBlance = tmpBlance + balanceProposal;
         _proposals[proposalId].balance = tmpBlance;
         _proposals[0].balance = _proposals[0].balance + balanceAll;
     }
@@ -154,27 +133,24 @@ contract Contest {
         return proposalId;
     }
 
-    function execute (
-        uint256 snapshotId
-    )public virtual {
+    function execute () public virtual {
         require(_adminAddress == msg.sender);
-        _currentSnapshotId = snapshotId;
+        totalSupply = _proposals[0].balance;
     }
 
     function withdraw(
         uint256 proposalId
     )public virtual {
         //スナップショットIDから合計トークン数を取得(ガバナンストークンから読み取り処理)
-        uint256 tmpTotalSupply = _tokenKVT.totalSupplyAt(_currentSnapshotId);
         uint256 tmpBalance;
         uint256 reward;
 
         require(_currentSnapshotId != 0);
         require(!_proposals[proposalId].executed);
         require(_proposals[proposalId].proposer == msg.sender);
-        tmpBalance = _tokenKVT.balanceOfAt(_proposals[proposalId].proposer, _currentSnapshotId);
-        reward = _proposals[proposalId].balance + _proposals[0].balance * tmpBalance / tmpTotalSupply - 1;
-        IERC20(_rewardAddress).transferFrom(_erc20KVT ,_proposals[proposalId].proposer, reward);
+        reward = _proposals[proposalId].balance + totalSupply * _proposals[proposalId].points / _proposals[0].points - 1;
+        address proposer = _proposals[proposalId].proposer;
+        payable(proposer).transfer(reward);
         _proposals[proposalId].executed = true;
     }
 
