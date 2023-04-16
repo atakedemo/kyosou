@@ -72,6 +72,14 @@ const Home: NextPage = () => {
     }
   };
 
+  const routeStake = async () => {
+    try {
+      Router.push("staking_list");
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
   return (
     <div className={styles.container}>
       <main className={styles.main}>
@@ -84,12 +92,23 @@ const Home: NextPage = () => {
         </div>
         
         <Box style={{ width: '100%', display: 'flex' }}>
-          <Card style={{ width: '31%', textAlign: 'center', backgroundColor: '#a09fa6', margin: '10px' }}>
+          <Card style={{ width: '31%', textAlign: 'center', margin: '10px' }}>
             <CardMedia component="img" image="https://dao-organizor.s3.ap-northeast-1.amazonaws.com/assets/organizor.png" />
             <CardContent>
               <Typography gutterBottom variant="h5" component="h2">
-                Contest Organizer (Coming soon...)
+                Contest Organizer
               </Typography>
+              <Button 
+                onClick={routeStake}
+                style={{ backgroundColor: '#3f51b5', color: 'white' }}
+              >
+                Stake Rewards
+              </Button>
+              <Button 
+                style={{ backgroundColor: '#a09fa6', color: 'black', marginTop: '10px' }}
+              >
+                Register Contest
+              </Button>
             </CardContent>
           </Card>
           <Card style={{ width: '31%', textAlign: 'center', margin: '10px' }}>
