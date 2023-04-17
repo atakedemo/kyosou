@@ -107,9 +107,9 @@ const ContestList = () => {
         signer
       );
       
-      await contract.vote(_proposalId,0,0, {
-        value: ethers.utils.parseEther("0.0"),
-        gasLimit: 100000,
+      await contract.vote(_proposalId,1,0, {
+        value: ethers.utils.parseEther("1.0"),
+        gasLimit: 300000,
       });
     } catch (error) {
       console.error(error);

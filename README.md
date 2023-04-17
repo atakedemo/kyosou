@@ -5,13 +5,13 @@
 ***
 About
 
-[Documentation: Kyosou(競奏)](https://www.canva.com/design/DAFf_XCmNyY/4gmTqRDNe7XyuKkZOoJT6w/view?utm_content=DAFf_XCmNyY&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink)
+[Documentation: Kyosou(競奏)](https://www.canva.com/design/DAFgLER7-so/m6UX7V_PSL4P8Es4-ODixg/view)
 
 ***
 Environment
 
-|Item|Address|
+|Item|Value|
 |---|---|
+|Network|Polygon Mumbai|
 |Contest.sol(Main)|0x9a513e5C611Bf76D5bC8001783Da8Ea2F3456115|
-|Reward(USDT)|0xA02f6adc7926efeBBd59Fd43A84f4E0c0c91e832|
 
