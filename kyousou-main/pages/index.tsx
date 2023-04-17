@@ -104,11 +104,6 @@ const Home: NextPage = () => {
               >
                 Stake Rewards
               </Button>
-              <Button 
-                style={{ backgroundColor: '#a09fa6', color: 'black', marginTop: '10px' }}
-              >
-                Register Contest
-              </Button>
             </CardContent>
           </Card>
           <Card style={{ width: '31%', textAlign: 'center', margin: '10px' }}>
