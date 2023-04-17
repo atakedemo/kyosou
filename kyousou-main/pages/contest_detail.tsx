@@ -99,15 +99,16 @@ const ContestList = () => {
   const voteWithPayment = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     try {
+      const signer = await provider.getSigner();
+      const _proposalId = "98141655824810256999349870770276401971676011510229032527330856770462069648716";
       const contract = new ethers.Contract(
         contractAddress,
         contractAbi,
-        provider
+        signer
       );
-      const signer = await provider.getSigner();
-      const _proposalId = "98141655824810256999349870770276401971676011510229032527330856770462069648716";
+      
       await contract.vote(_proposalId,0,0, {
-        value: ethers.utils.parseEther("1"),
+        value: ethers.utils.parseEther("0.0"),
         gasLimit: 100000,
       });
     } catch (error) {
